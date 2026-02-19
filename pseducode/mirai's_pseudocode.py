@@ -6,8 +6,7 @@
     # asks user for new username
     # if there's already a user registered under that name ask again
     # if not asks user for new password
-    # if there's already a user with that password ask again
-    # if not hash password
+    # hash new password
     # update list with new username and hashed password
     # return updated list
 
