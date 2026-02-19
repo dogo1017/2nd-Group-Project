@@ -1,0 +1,44 @@
+DL 1st, douglas pseudocode(dino game)
+
+import pygame, random, and os 
+
+initialize pygame and screen settings
+
+set player to rectangle
+
+use try and accept to attempt to import the images, if failed then set assets to basic shapes
+
+import the sounds and set as variables
+
+load all game assets (dino animation frames, ground, etc.)
+
+initialize variables:
+    velocity_y (direction and speed up and down)
+    gravity (amount of force applied downward every frame)
+    ground_y (height of ground)
+    player.y (current height)
+    obstacles (list of all current obstacles)
+    speed (speed at which the character moves along the x axis)
+    is_ducking (boolean to keep track of current users action state)
+    normal_height (height of hitbox of dino when not ducking)
+    duck_height (height of the players hitbox when ducking)
+
+make constant SPAWN_CACTUS_EVENT set as USEREVENT + 1
+set pygame timer for spawning cacti 
+make constant ANIMATION_EVENT as USEREVENT + 2
+make timer for ANIMATION_EVENT
+
+make vvariable start_ticks that gets the amount of tixks
+set clock to the time using pygames.time.Clock()
+initialize running as True
+initialize game_started as False
+initiazlize first_jump_made as False
+set difficulty to 0
+
+definte the function spawn_cactus_group
+
+    if statement that adds a smaller and smaller amount to difficulty as difficulty gets higher 
+
+    set dimensions dor small and large cacti 
+
+    choose 

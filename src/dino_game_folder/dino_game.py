@@ -2,6 +2,7 @@ import pygame
 import random
 import os
 
+
 high_score = 164
 
 pygame.init()
