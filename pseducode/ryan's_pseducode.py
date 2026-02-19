@@ -39,5 +39,8 @@
         #Esle break
 
     #If its admin then run admin function
-
+        #Return what admin returns (The list)
     #If it is quit then return list of dictionarys and quit
+
+
+#This will be imported into main to allow them to log in
