@@ -13,7 +13,7 @@
 
 # function to display profile, takes in list with user logged in (used when user is already logged in):
     # searches through list for the user with status logged in
-    # once found prints that users username, unhashed pasword, and current highscore
+    # once found prints that users username, and current highscore
 
 # save changes function, takes in the list of users:
     # updates csv with the entire list of users
