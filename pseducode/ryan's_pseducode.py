@@ -9,37 +9,22 @@
         #Ask them what they want to sign into, or if they want to quit
         #Get correct input
     #Put into a loop
-        #if they entered a username, ask them for there password or quit
-            #Get correct input
+        #if they entered a correct username, ask them for there password or quit
+            #Then allow them to input passwords with an option to quit
+            #If they sucsefully log in, then change status to online
         #Else quit back to main
     #Return list of dictionarys
 
 
-#Function for admin loggin
-    #put into loop
-        #Ask them for username or if they want to quit
-        #If user is adinm than continue
-        #If  username is quit, then break
-        #Else tell them that they have the wrong name
-
-    #put into loop
-        #Ask for password, or quit
-        #If hashed password is adinm password than continue
-        #If  password is quit, then break
-        #Else tell them that they have the wrong password
-
-    #Return password
-
 #Create main function for connecting the admin and user stuff.
-    #Would you like to sign in as a user or admin or quit?
+    #Would you like to sign in as a user or quit?
     #Get propper input
 
-    #Check to see if they signed in as user, if they did make ssure that there is stuff for user sing in
+    #Check to see if they choose user, if they did make sure that there is stuff for user sing in
         #Run loggin function
+        #Then return the new
         #Esle break
 
-    #If its admin then run admin function
-        #Return what admin returns (The list)
     #If it is quit then return list of dictionarys and quit
 
 
