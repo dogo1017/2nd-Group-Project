@@ -4,7 +4,18 @@
 
 # Variable named filename for the CSV
 
+# High Score Contained in a dicitonary
+
 # Players name is the key and the score is the value
+
+# Display leader board function
+ # take the information from the CSV and display the top ten
+
+# Load scores function
+
+# save score function 
+ # take the highest score of the player and replace it with the current score of the user
+ # Save it to the CSV
 
 # UPDATE LEADER BOARD FUNCTION
 
