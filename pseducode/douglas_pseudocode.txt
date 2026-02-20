@@ -1,6 +1,5 @@
-Here's the completed pseudocode continuing from where you left off, keeping it simple and in your style:
-
 DL 1st, douglas pseudocode(dino game)
+
 import pygame, random, and os
 initialize pygame and screen settings
 set player to rectangle
