@@ -1,0 +1,81 @@
+DL 1st, douglas pseudocode(dino game)
+
+import pygame, random, and os
+initialize pygame and screen settings
+set player to rectangle
+use try and accept to attempt to import the images, if failed then set assets to basic shapes
+import the sounds and set as variables
+load all game assets (dino animation frames, ground, etc.)
+initialize variables:
+
+velocity_y (direction and speed up and down)
+gravity (amount of force applied downward every frame)
+ground_y (height of ground)
+player.y (current height)
+obstacles (list of all current obstacles)
+speed (speed at which the character moves along the x axis)
+is_ducking (boolean to keep track of current users action state)
+normal_height (height of hitbox of dino when not ducking)
+duck_height (height of the players hitbox when ducking)
+
+make constant SPAWN_CACTUS_EVENT set as USEREVENT + 1
+set pygame timer for spawning cacti
+make constant ANIMATION_EVENT as USEREVENT + 2
+make timer for ANIMATION_EVENT
+make variable start_ticks that gets the amount of ticks
+set clock to the time using pygame.time.Clock()
+initialize running as True
+initialize game_started as False
+initialize first_jump_made as False
+set difficulty to 0
+define the function spawn_cactus_group
+    if statement that adds a smaller and smaller amount to difficulty as difficulty gets higher
+    set dimensions for small and large cacti
+    choose randomly how many cacti to spawn based on current difficulty
+    loop through the count of cacti to spawn
+        randomly decide if each cactus is large or small based on difficulty
+        pick a random image from the matching cactus list
+        scale the image to the correct size
+        place the cactus rect offscreen to the right with spacing
+        add the cactus rect and image to the obstacles list
+scale and set up the ground image and set two ground positions for scrolling
+start outer while loop (runs forever, restarts game each death)
+    if current score beats high score, update high score
+    reset all variables back to starting values for new game
+    display high score on screen using digit images
+    reset timers and clock for new game
+    start inner while loop (the actual game loop, runs while running is True)
+        reset score digits and score_time to 0
+        if game has started, calculate score from elapsed ticks and update difficulty
+        loop through all pygame events
+            if quit event, set running to False
+            if spawn cactus event and game started, call spawn_cactus_group
+            if space or up arrow pressed
+                if player is on the ground, apply upward velocity and play jump sound
+                if first jump and game not started yet, mark first_jump_made as True
+            if down arrow pressed and player is on ground
+                set is_ducking to True, shrink hitbox height, update dino image to duck
+            if down arrow released
+                set is_ducking to False, restore normal hitbox height, update dino image
+            if animation event fires and game started
+                alternate between run or duck animation frames depending on is_ducking
+        apply velocity to player position, then apply gravity to velocity
+        if player hits the ground, stop them there and reset velocity
+        if first jump was made and game not started yet, officially start game and set speed
+        if game started
+            if score hits a multiple of 100, play point sound
+            gradually increase speed up to the max speed
+            scroll both ground images to the left by speed
+            if either ground image scrolls fully offscreen, reset it to the right of the other
+            loop through all obstacles
+                move each obstacle left by speed
+                if obstacle is fully offscreen left, remove it from list
+                if player collides with obstacle, set running to False
+        fill screen white
+        draw both ground images
+        convert score to 5 digit string and draw each digit using font images
+        draw HI label and high score digits on screen
+        draw dino using image or green rectangle depending on use_image
+        draw all obstacles using their images
+        update the display and tick the clock at 60fps
+quit pygame

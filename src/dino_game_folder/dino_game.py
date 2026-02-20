@@ -2,6 +2,7 @@ import pygame
 import random
 import os
 
+
 high_score = 164
 
 pygame.init()
@@ -110,120 +111,21 @@ ground_width = ground_scaled.get_width()
 ground_x1 = 0
 ground_x2 = ground_width
 
-def pause_game():
-    global game_started, velocity_y
-    game_started = False
+while True:
+
+    if score_time > high_score:
+        high_score = score_time
+
+
     velocity_y = 0
-    if use_image:
-        global current_image
-        current_image = image_surface_standing
-
-
-while running:
-    dig1, dig2, dig3, dig4, dig5 = 0, 0, 0, 0, 0
-    score_time = 0
-    # Update difficulty based on score (0-100 scale)
-    if game_started:
-        score_time = (pygame.time.get_ticks() - start_ticks) // 100
-        difficulty = min(100, score_time / 5)
-
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        elif event.type == SPAWN_CACTUS_EVENT:
-            if game_started:
-                spawn_cactus_group()
-        elif event.type == pygame.KEYDOWN:
-            if event.key in [pygame.K_SPACE, pygame.K_UP]:
-                if not game_started and not first_jump_made and player.y >= ground_y:
-                    velocity_y = -10.5
-                    jump.play()
-                    first_jump_made = True
-                    if use_image:
-                        current_image = image_surface_standing
-                elif game_started and player.y >= ground_y:
-                    velocity_y = -10.5
-                    jump.play()  
-                    if use_image:
-                        current_image = image_surface_standing
-            elif event.key == pygame.K_DOWN:
-                if game_started and player.y >= ground_y:
-                    is_ducking = True
-                    player.height = duck_height
-                    player.y = ground_y + (normal_height - duck_height)
-                    if use_image:
-                        current_image = image_surface_duck1
-        elif event.type == pygame.KEYUP:
-            if event.key == pygame.K_DOWN:
-                if is_ducking:
-                    is_ducking = False
-                    player.height = normal_height
-                    player.y = ground_y
-                    if use_image:
-                        current_image = image_surface_run1
-        elif event.type == ANIMATION_EVENT:
-            if game_started and use_image and player.y >= ground_y:
-                if is_ducking:
-                    if current_image == image_surface_duck1:
-                        current_image = image_surface_duck2
-                    else:
-                        current_image = image_surface_duck1
-                else:
-                    if current_image == image_surface_run1:
-                        current_image = image_surface_run2
-                    else:
-                        current_image = image_surface_run1
-
-    player.y += velocity_y
-    velocity_y += gravity
-    if player.y >= ground_y:
-        player.y = ground_y
-        velocity_y = 0
-        if first_jump_made and not game_started:
-            game_started = True
-            start_ticks = pygame.time.get_ticks()
-            speed = 4
-            if use_image:
-                current_image = image_surface_run1
-
-    if game_started:
-        if score_time % 100 == 0:
-            if score_time != 0:
-                point.play()
-        if speed < 13:
-            speed += 0.005
-        
-        ground_x1 -= speed
-        ground_x2 -= speed
-
-        if ground_x1 + ground_width < 0:
-            ground_x1 = ground_x2 + ground_width
-
-        if ground_x2 + ground_width < 0:
-            ground_x2 = ground_x1 + ground_width
-
-        for obs in obstacles[:]:
-            obs['rect'].x -= speed
-            if obs['rect'].x + obs['rect'].width < 0:
-                obstacles.remove(obs)
-            if player.colliderect(obs['rect']):
-                running = False
-
-    screen.fill((255, 255, 255))
-
-    screen.blit(ground_scaled, (ground_x1, 207))
-    screen.blit(ground_scaled, (ground_x2, 207))
-  
-    score_str = str(score_time).zfill(5)
-    for i, num in enumerate(score_str):
-        exec(f"dig{i+1} = int(num)")
-    screen.blit(pygame.transform.scale(font_imgs[dig1], (12, 14)), (930, 15))
-    screen.blit(pygame.transform.scale(font_imgs[dig2], (12, 14)), (942, 15))
-    screen.blit(pygame.transform.scale(font_imgs[dig3], (12, 14)), (954, 15))
-    screen.blit(pygame.transform.scale(font_imgs[dig4], (12, 14)), (966, 15))
-    screen.blit(pygame.transform.scale(font_imgs[dig5], (12, 14)), (978, 15))
-    screen.blit(pygame.transform.scale(hi_img, (24, 14)), (820, 15))
+    gravity = 0.6
+    ground_y = 175
+    player.y = ground_y
+    obstacles = []
+    speed = 0
+    is_ducking = False
+    normal_height = 47
+    duck_height = 30
 
     high_score_str = str(high_score ).zfill(5)
     for i, num in enumerate(high_score_str):
@@ -234,16 +136,134 @@ while running:
     screen.blit(pygame.transform.scale(font_imgs[dig4], (12, 14)), (886, 15))
     screen.blit(pygame.transform.scale(font_imgs[dig5], (12, 14)), (898, 15))
 
-    if use_image:
-        screen.blit(current_image, player.topleft)
-    else:
-        pygame.draw.rect(screen, (0, 255, 0), player)
+    pygame.time.set_timer(SPAWN_CACTUS_EVENT, 2000)
+    pygame.time.set_timer(ANIMATION_EVENT, 100)
 
-    for obs in obstacles:
-        screen.blit(obs['image'], obs['rect'].topleft)
+    start_ticks = pygame.time.get_ticks()
+    clock = pygame.time.Clock()
+    running = True
+    game_started = False
+    first_jump_made = False
+    difficulty = 0
 
-    pygame.display.flip()
-    clock.tick(60)
+    while running:
+        dig1, dig2, dig3, dig4, dig5 = 0, 0, 0, 0, 0
+        score_time = 0
+        # Update difficulty based on score (0-100 scale)
+        if game_started:
+            score_time = (pygame.time.get_ticks() - start_ticks) // 100
+            difficulty = min(100, score_time / 5)
+
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == SPAWN_CACTUS_EVENT:
+                if game_started:
+                    spawn_cactus_group()
+            elif event.type == pygame.KEYDOWN:
+                if event.key in [pygame.K_SPACE, pygame.K_UP]:
+                    if not game_started and not first_jump_made and player.y >= ground_y:
+                        velocity_y = -10.5
+                        jump.play()
+                        first_jump_made = True
+                        if use_image:
+                            current_image = image_surface_standing
+                    elif game_started and player.y >= ground_y:
+                        velocity_y = -10.5
+                        jump.play()  
+                        if use_image:
+                            current_image = image_surface_standing
+                elif event.key == pygame.K_DOWN:
+                    if game_started and player.y >= ground_y:
+                        is_ducking = True
+                        player.height = duck_height
+                        player.y = ground_y + (normal_height - duck_height)
+                        if use_image:
+                            current_image = image_surface_duck1
+            elif event.type == pygame.KEYUP:
+                if event.key == pygame.K_DOWN:
+                    if is_ducking:
+                        is_ducking = False
+                        player.height = normal_height
+                        player.y = ground_y
+                        if use_image:
+                            current_image = image_surface_run1
+            elif event.type == ANIMATION_EVENT:
+                if game_started and use_image and player.y >= ground_y:
+                    if is_ducking:
+                        if current_image == image_surface_duck1:
+                            current_image = image_surface_duck2
+                        else:
+                            current_image = image_surface_duck1
+                    else:
+                        if current_image == image_surface_run1:
+                            current_image = image_surface_run2
+                        else:
+                            current_image = image_surface_run1
+
+        player.y += velocity_y
+        velocity_y += gravity
+        if player.y >= ground_y:
+            player.y = ground_y
+            velocity_y = 0
+            if first_jump_made and not game_started:
+                game_started = True
+                start_ticks = pygame.time.get_ticks()
+                speed = 4
+                if use_image:
+                    current_image = image_surface_run1
+
+        if game_started:
+            if score_time % 100 == 0:
+                if score_time != 0:
+                    point.play()
+            if speed < 13:
+                speed += 0.005
+
+            ground_x1 -= speed
+            ground_x2 -= speed
+
+            if ground_x1 + ground_width < 0:
+                ground_x1 = ground_x2 + ground_width
+
+            if ground_x2 + ground_width < 0:
+                ground_x2 = ground_x1 + ground_width
+
+            for obs in obstacles[:]:
+                obs['rect'].x -= speed
+                if obs['rect'].x + obs['rect'].width < 0:
+                    obstacles.remove(obs)
+                if player.colliderect(obs['rect']):
+                    running = False
+
+        screen.fill((255, 255, 255))
+
+        screen.blit(ground_scaled, (ground_x1, 207))
+        screen.blit(ground_scaled, (ground_x2, 207))
+    
+        score_str = str(score_time).zfill(5)
+        for i, num in enumerate(score_str):
+            exec(f"dig{i+1} = int(num)")
+        screen.blit(pygame.transform.scale(font_imgs[dig1], (12, 14)), (930, 15))
+        screen.blit(pygame.transform.scale(font_imgs[dig2], (12, 14)), (942, 15))
+        screen.blit(pygame.transform.scale(font_imgs[dig3], (12, 14)), (954, 15))
+        screen.blit(pygame.transform.scale(font_imgs[dig4], (12, 14)), (966, 15))
+        screen.blit(pygame.transform.scale(font_imgs[dig5], (12, 14)), (978, 15))
+        screen.blit(pygame.transform.scale(hi_img, (24, 14)), (820, 15))
+
+
+        if use_image:
+            screen.blit(current_image, player.topleft)
+        else:
+            pygame.draw.rect(screen, (0, 255, 0), player)
+
+        for obs in obstacles:
+            screen.blit(obs['image'], obs['rect'].topleft)
+
+        pygame.display.flip()
+        clock.tick(60)
+
 
 
 pygame.quit()
