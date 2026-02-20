@@ -3,7 +3,7 @@ import random
 import os
 
 
-high_score = 164
+high_score = 155
 
 pygame.init()
 screen = pygame.display.set_mode((1000, 250))
@@ -23,14 +23,14 @@ def load_image(name, scale=None):
         surf.fill((255, 0, 0))
         return surf
 
-jump = pygame.mixer.Sound('src/dino_game_folder/jump.mp3') 
-point = pygame.mixer.Sound('src/dino_game_folder/point.mp3')
+jump = pygame.mixer.Sound('src/dino_game_folder/sounds/jump.mp3') 
+point = pygame.mixer.Sound('src/dino_game_folder/sounds/point.mp3')
 
-small_cacti = [load_image(f'src/dino_game_folder/small{i}.png') for i in range(1, 7)]
-large_cacti = [load_image(f'src/dino_game_folder/large{i}.png') for i in range(1, 7)]
-ground = load_image('src/dino_game_folder/ground.png')
-font_imgs = [load_image(f'src/dino_game_folder/{i}.png') for i in range(0, 10)]
-hi_img = load_image('src/dino_game_folder/hi.png')
+small_cacti = [load_image(f'src/dino_game_folder/images/small{i}.png') for i in range(1, 7)]
+large_cacti = [load_image(f'src/dino_game_folder/images/large{i}.png') for i in range(1, 7)]
+ground = load_image('src/dino_game_folder/images/ground.png')
+font_imgs = [load_image(f'src/dino_game_folder/images/{i}.png') for i in range(0, 10)]
+hi_img = load_image('src/dino_game_folder/images/hi.png')
 
 use_image = False
 image_surface_standing = None
@@ -39,11 +39,11 @@ image_surface_run2 = None
 current_image = None
 
 try:
-    image_surface_standing = load_image('src/dino_game_folder/standing_dino.jpg', (player.width, player.height))
-    image_surface_run1 = load_image('src/dino_game_folder/running1.png', (player.width, player.height))
-    image_surface_run2 = load_image('src/dino_game_folder/running2.png', (player.width, player.height))
-    image_surface_duck1 = load_image('src/dino_game_folder/duck_left.webp', (59, 30))
-    image_surface_duck2 = load_image('src/dino_game_folder/duck_right.webp', (59, 30))
+    image_surface_standing = load_image('src/dino_game_folder/images/standing_dino.jpg', (player.width, player.height))
+    image_surface_run1 = load_image('src/dino_game_folder/images/running1.png', (player.width, player.height))
+    image_surface_run2 = load_image('src/dino_game_folder/images/running2.png', (player.width, player.height))
+    image_surface_duck1 = load_image('src/dino_game_folder/images/duck_left.webp', (59, 50))
+    image_surface_duck2 = load_image('src/dino_game_folder/images/duck_right.webp', (59, 50))
     current_image = image_surface_standing
     use_image = True
 except:
@@ -75,7 +75,7 @@ def spawn_cactus_group():
     # Difficulty affects number of cacti and size distribution
     # At low difficulty (0-30), prefer fewer and smaller cacti
     # At high difficulty (70+), allow more and larger cacti
-    
+
     if difficulty < 20:
         # Early game - mostly single small cacti
         count = 1 if random.random() < 0.8 else 2
@@ -92,7 +92,7 @@ def spawn_cactus_group():
         # Late game - harder patterns
         count = random.randint(1, 3)
         prefer_small = 0.4
-    
+
     sizes = {"small": (17, 35), "large": (25, 50)}
     for i in range(count):
         is_large = random.random() > prefer_small
@@ -111,6 +111,8 @@ ground_width = ground_scaled.get_width()
 ground_x1 = 0
 ground_x2 = ground_width
 
+score_time = 0
+
 while True:
 
     if score_time > high_score:
@@ -118,23 +120,10 @@ while True:
 
 
     velocity_y = 0
-    gravity = 0.6
-    ground_y = 175
     player.y = ground_y
     obstacles = []
     speed = 0
     is_ducking = False
-    normal_height = 47
-    duck_height = 30
-
-    high_score_str = str(high_score ).zfill(5)
-    for i, num in enumerate(high_score_str):
-        exec(f"dig{i+1} = int(num)")
-    screen.blit(pygame.transform.scale(font_imgs[dig1], (12, 14)), (850, 15))
-    screen.blit(pygame.transform.scale(font_imgs[dig2], (12, 14)), (862, 15))
-    screen.blit(pygame.transform.scale(font_imgs[dig3], (12, 14)), (874, 15))
-    screen.blit(pygame.transform.scale(font_imgs[dig4], (12, 14)), (886, 15))
-    screen.blit(pygame.transform.scale(font_imgs[dig5], (12, 14)), (898, 15))
 
     pygame.time.set_timer(SPAWN_CACTUS_EVENT, 2000)
     pygame.time.set_timer(ANIMATION_EVENT, 100)
@@ -235,13 +224,17 @@ while True:
                 if obs['rect'].x + obs['rect'].width < 0:
                     obstacles.remove(obs)
                 if player.colliderect(obs['rect']):
+                    while True:
+                        speed = 0
+                        print('Add death sprite, pause movement, and give restart or exit button')
+
                     running = False
 
         screen.fill((255, 255, 255))
 
         screen.blit(ground_scaled, (ground_x1, 207))
         screen.blit(ground_scaled, (ground_x2, 207))
-    
+
         score_str = str(score_time).zfill(5)
         for i, num in enumerate(score_str):
             exec(f"dig{i+1} = int(num)")
@@ -252,6 +245,18 @@ while True:
         screen.blit(pygame.transform.scale(font_imgs[dig5], (12, 14)), (978, 15))
         screen.blit(pygame.transform.scale(hi_img, (24, 14)), (820, 15))
 
+        high_score_str = str(high_score ).zfill(5)
+        for i, num in enumerate(high_score_str):
+            exec(f"dig{i+1} = int(num)")
+        screen.blit(pygame.transform.scale(font_imgs[dig1], (12, 14)), (850, 15))
+        screen.blit(pygame.transform.scale(font_imgs[dig2], (12, 14)), (862, 15))
+        screen.blit(pygame.transform.scale(font_imgs[dig3], (12, 14)), (874, 15))
+        screen.blit(pygame.transform.scale(font_imgs[dig4], (12, 14)), (886, 15))
+        screen.blit(pygame.transform.scale(font_imgs[dig5], (12, 14)), (898, 15))
+
+    if game_started == False:
+        pygame.draw.rect((50, 15), pygame.Rect((0, 0), (10, 10))) 
+    
 
         if use_image:
             screen.blit(current_image, player.topleft)
@@ -263,7 +268,6 @@ while True:
 
         pygame.display.flip()
         clock.tick(60)
-
 
 
 pygame.quit()
