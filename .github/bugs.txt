@@ -1,4 +1,2 @@
 -- Dino --
-Ducking wrong size
-Close program after finished
 less functions than probably needed
