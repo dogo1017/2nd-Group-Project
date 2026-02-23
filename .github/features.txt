@@ -1,4 +1,3 @@
 -- dino --
-Birds
 Night
 Skins

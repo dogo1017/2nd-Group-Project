@@ -34,17 +34,11 @@ screen = pygame.display.set_mode((1000, 250))
 pygame.display.set_caption("Dino Game")
 screen_width, screen_height = 1000, 250
 
-# ---------------------------------------------------------------------------
-# Sprite sheet loading
-# ---------------------------------------------------------------------------
+
 SPRITE_SHEET_PATH = 'src/dino_game_folder/images/sprite_sheet.png'
 
 _sheet = pygame.image.load(SPRITE_SHEET_PATH).convert_alpha()
 
-# Scale factor: the sprite sheet is drawn at ~2× the original Chrome dino size.
-# We choose a display scale so the dino fits well in the 250-px tall window.
-# Original sprite sheet pixel dims (measured):
-#   standing dino body: 88 × 112  →  we want ~44 × 56 on screen  → scale = 0.5
 SCALE = 0.5
 
 def crop_sprite(sheet, sx, sy, sw, sh, scale=SCALE):
@@ -55,21 +49,16 @@ def crop_sprite(sheet, sx, sy, sw, sh, scale=SCALE):
         surf = pygame.transform.scale(surf, (max(1, int(sw * scale)), max(1, int(sh * scale))))
     return surf
 
-# ---- Dino sprites ----
-# Standing (body only, cloud excluded from crop)
 img_standing    = crop_sprite(_sheet,  76,  38,  88, 112)
-# Running frames (from right-side large dino variants – better quality)
 img_run1        = crop_sprite(_sheet, 1682,  6,  80, 120)
 img_run2        = crop_sprite(_sheet, 1770,  6,  80, 120)
 # Ducking frames
 img_duck1       = crop_sprite(_sheet, 2210, 40, 110,  88)
 img_duck2       = crop_sprite(_sheet, 2328, 40, 110,  88)
 
-# ---- Bird sprites ----
-img_bird1       = crop_sprite(_sheet,  264, 18,  84, 132)   # wings level
-img_bird2       = crop_sprite(_sheet,  356,  6,  84, 144)   # wings down
+img_bird1       = crop_sprite(_sheet,  264, 18,  84, 132)   
+img_bird2       = crop_sprite(_sheet,  356,  6,  84, 144)   
 
-# ---- Cactus sprites (small × 6, large × 6) ----
 _small_cactus_coords = [
     (448, 4, 30, 146), (482, 4, 30, 146), (516, 4, 30, 146),
     (550, 4, 30, 146), (584, 4, 30, 120), (618, 4, 30, 118),
@@ -81,14 +70,10 @@ _large_cactus_coords = [
 small_cacti = [crop_sprite(_sheet, *c) for c in _small_cactus_coords]
 large_cacti = [crop_sprite(_sheet, *c) for c in _large_cactus_coords]
 
-# ---- Ground strip ----
-# The ground texture lives at y≈155-175, x=13-575 in the sprite sheet.
-# We tile it across the screen width at the ground line.
 _ground_strip   = crop_sprite(_sheet, 13, 155, 563, 20, scale=1.0)
 ground_scaled   = pygame.transform.scale(_ground_strip, (2400, 14))
 ground_width    = ground_scaled.get_width()
 
-# ---- Score digits (0-9) and HI ----
 _digit_coords = [
     (1294, 2, 21, 126),  # 0
     (1316, 2, 16, 118),  # 1
@@ -106,16 +91,13 @@ font_imgs = [crop_sprite(_sheet, sx, sy, sw, sh, scale=12/sw) for sx, sy, sw, sh
 # HI label: two chars side-by-side starting at x=1630
 hi_img = crop_sprite(_sheet, 1630, 29, 52, 95, scale=24/52)
 
-# ---------------------------------------------------------------------------
-# Player setup – sized to the standing sprite
-# ---------------------------------------------------------------------------
 DINO_W = img_standing.get_width()
 DINO_H = img_standing.get_height()
 player = pygame.Rect(50, 0, DINO_W, DINO_H)
 
 velocity_y = 0
 gravity = 0.6
-ground_y = 175 - DINO_H          # top of dino when standing on ground
+ground_y = 175 - DINO_H
 player.y = ground_y
 
 duck_w     = img_duck1.get_width()
@@ -126,15 +108,9 @@ duck_height   = duck_h
 is_ducking     = False
 current_image  = img_standing
 
-# ---------------------------------------------------------------------------
-# Sound
-# ---------------------------------------------------------------------------
 jump_sfx  = pygame.mixer.Sound('src/dino_game_folder/sounds/jump.mp3')
 point_sfx = pygame.mixer.Sound('src/dino_game_folder/sounds/point.mp3')
 
-# ---------------------------------------------------------------------------
-# Obstacles / timing
-# ---------------------------------------------------------------------------
 obstacles = []
 speed     = 0
 
@@ -179,9 +155,6 @@ def spawn_cactus_group():
         new_rect = pygame.Rect(1000 + i * (cw + 4), 207 - ch, cw, ch)
         obstacles.append({'rect': new_rect, 'image': img, 'is_bird': False})
 
-# ---------------------------------------------------------------------------
-# UI helpers
-# ---------------------------------------------------------------------------
 ui_font   = pygame.font.SysFont(None, 28)
 instr_font = pygame.font.SysFont(None, 30)
 
@@ -200,19 +173,14 @@ def draw_score(surface, score, x_start, y):
         surface.blit(glyph, (cx, y))
         cx += glyph.get_width() + 1
 
-# ---------------------------------------------------------------------------
-# Main game loop
-# ---------------------------------------------------------------------------
 clock          = pygame.time.Clock()
 is_first_play  = True
 score_time     = 0
 
 while True:
-    # --- Update high score between rounds ---
     if score_time > high_score:
         high_score = score_time
 
-    # --- Reset state ---
     velocity_y    = 0
     player.width  = DINO_W
     player.height = DINO_H
@@ -242,14 +210,12 @@ while True:
         speed         = 4
         current_image = img_run1
 
-    # -----------------------------------------------------------------------
     while running:
         score_time = 0
         if game_started:
             score_time = (pygame.time.get_ticks() - start_ticks) // 100
             difficulty = min(100, score_time / 5)
 
-        # --- Events ---
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -296,11 +262,9 @@ while True:
             elif event.type == BIRD_ANIM_EVENT:
                 bird_frame = 1 - bird_frame
 
-        # --- Physics ---
         player.y += velocity_y
         velocity_y += gravity
 
-        # Trigger game start on first jump landing
         if is_first_play and first_jump_made and not game_started and velocity_y > 0 and player.y >= ground_y - 5:
             game_started  = True
             start_ticks   = pygame.time.get_ticks()
@@ -311,7 +275,6 @@ while True:
             player.y   = ground_y
             velocity_y = 0
 
-        # --- Game logic ---
         if game_started:
             if score_time % 100 == 0 and score_time != 0:
                 point_sfx.play()
@@ -332,7 +295,6 @@ while True:
                     obstacles.remove(obs)
                     continue
                 if player.colliderect(obs['rect']):
-                    # --- Death screen ---
                     is_first_play  = False
                     dead           = True
                     restart_rect   = pygame.Rect(500 - 30, 125 - 30, 60, 60)
@@ -373,7 +335,6 @@ while True:
                         pygame.draw.rect(screen, (200, 200, 200), quit_rect)
                         screen.blit(quit_surf, (quit_rect.x + 8, quit_rect.y + 7))
 
-                        # Score display on death screen
                         screen.blit(hi_img, (820, 15))
                         draw_score(screen, high_score, 848, 15)
                         draw_score(screen, score_time, 930, 15)
@@ -383,20 +344,16 @@ while True:
 
                     running = False
 
-        # --- Draw ---
         screen.fill((255, 255, 255))
         screen.blit(ground_scaled, (ground_x1, 207))
         screen.blit(ground_scaled, (ground_x2, 207))
 
-        # Score HUD
         screen.blit(hi_img, (820, 15))
         draw_score(screen, high_score, 848, 15)
         draw_score(screen, score_time, 930, 15)
 
-        # Player
         screen.blit(current_image, player.topleft)
 
-        # Obstacles
         for obs in obstacles:
             if obs['is_bird']:
                 bimg = img_bird1 if bird_frame == 0 else img_bird2
@@ -404,7 +361,6 @@ while True:
             else:
                 screen.blit(obs['image'], obs['rect'].topleft)
 
-        # Instruction curtain (first play only)
         if is_first_play and (not game_started or curtain_x < screen_width):
             curtain_left = player.right + 10 + curtain_x
             if curtain_left < screen_width:
