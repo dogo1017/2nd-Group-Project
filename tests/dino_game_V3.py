@@ -43,12 +43,12 @@ def crop_sprite(sx, sy, sw, sh, scale=0.5):
     surf.blit(_sheet, (0, 0), (sx, sy, sw, sh))
     return pygame.transform.scale(surf, (max(1, int(sw * scale)), max(1, int(sh * scale))))
 
-img_standing = crop_sprite(76,   8,   88,  88)
-img_run1     = crop_sprite(1682, 6,   80,  86)
-img_run2     = crop_sprite(1858, 6,   80,  86)
-img_duck1    = crop_sprite(2210, 40, 110,  52)
-img_duck2    = crop_sprite(2328, 40, 110,  52)
-img_bird1    = crop_sprite(264,  18,  84,  60)
+img_standing = crop_sprite(1679, 3,   88,  94)
+img_run1     = crop_sprite(1943, 3,   88,  94)
+img_run2     = crop_sprite(1855, 3,   88,  94)
+img_duck1    = crop_sprite(2207, 37, 118,  60)
+img_duck2    = crop_sprite(2325, 37, 118,  60)
+img_bird1    = crop_sprite(261,  15,  84,  60)
 img_bird2    = crop_sprite(356,   6,  84,  52)
 
 small_cacti = [crop_sprite(448 + i * 34, 4, 30, 66) for i in range(6)]
@@ -60,7 +60,7 @@ large_cacti = [
     crop_sprite(850, 4, 100, 96),
 ]
 
-_ground_strip = crop_sprite(13, 132, 563, 34, scale=1.0)
+_ground_strip = crop_sprite(3, 105, 2400, 16, scale=1.0)
 ground_scaled = pygame.transform.scale(_ground_strip, (2400, 14))
 ground_width  = ground_scaled.get_width()
 
