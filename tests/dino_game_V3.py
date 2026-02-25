@@ -1,6 +1,7 @@
 import pygame
 import random
 import os
+import time
 
 
 # NOTES FOR SELF (IGNORE)
@@ -51,7 +52,7 @@ img_duck2 = crop_sprite(2325, 37, 118, 60)
 img_bird1 = crop_sprite(261, 15, 84, 60)
 img_bird2 = crop_sprite(356, 6, 84, 52)
 
-small_cacti = [crop_sprite(448 + i * 34, 4, 30, 66) for i in range(6)]
+small_cacti = [crop_sprite(447 + i * 34, 3, 34, 66) for i in range(6)]
 large_cacti = [
     crop_sprite(654, 4, 46, 96),
     crop_sprite(704, 4, 44, 96),
@@ -73,12 +74,12 @@ player = pygame.Rect(50, 0, DINO_W, DINO_H)
 
 velocity_y = 0
 gravity = 0.6
-ground_y = 175 - DINO_H
+ground_y = 225 - DINO_H
 player.y = ground_y
 duck_w = img_duck1.get_width()
 duck_h = img_duck1.get_height()
 normal_height = DINO_H
-duck_height = duck_h
+duck_height = duck_h 
 is_ducking = False
 current_image = img_standing
 
@@ -122,7 +123,7 @@ def spawn_cactus_group():
     for i in range(count):
         img = random.choice(large_cacti if random.random() > prefer_small else small_cacti)
         cw, ch = img.get_size()
-        new_rect = pygame.Rect(1000 + i * (cw + 4), 207 - ch, cw, ch)
+        new_rect = pygame.Rect(1000 + i * (cw + 4), 220 - ch, cw, ch)
         obstacles.append({'rect': new_rect, 'image': img, 'is_bird': False})
 
 ui_font = pygame.font.SysFont(None, 28)
@@ -200,6 +201,7 @@ while True:
                         jump_sfx.play()
                         first_jump_made = True
                         current_image = img_standing
+                        ground_y = 225 - DINO_H
                     elif game_started and player.y >= ground_y:
                         velocity_y = -10.5
                         jump_sfx.play()
@@ -207,8 +209,9 @@ while True:
                 elif event.key == pygame.K_DOWN:
                     if game_started and player.y >= ground_y:
                         is_ducking = True
+                        ground_y = 225 - DINO_H + 17
                         player.width = duck_w
-                        player.height = duck_height
+                        player.height = duck_height - 20
                         player.y = ground_y + (normal_height - duck_height)
                         current_image = img_duck1
 
@@ -219,6 +222,7 @@ while True:
                     player.height = DINO_H
                     player.y = ground_y
                     current_image = img_run1
+                    ground_y = 225 - DINO_H
 
             elif event.type == ANIMATION_EVENT:
                 if game_started and player.y >= ground_y:
