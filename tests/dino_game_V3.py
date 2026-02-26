@@ -37,12 +37,22 @@ screen = pygame.display.set_mode((1000, 250))
 pygame.display.set_caption("Dino Game")
 screen_width, screen_height = 1000, 250
 
-_sheet = pygame.image.load('src/dino_game_folder/images/sprite_sheet.png').convert_alpha()
+sheet = pygame.image.load('src/dino_game_folder/images/sprite_sheet.png').convert_alpha()
 
 def crop_sprite(sx, sy, sw, sh, scale=0.5):
     surf = pygame.Surface((sw, sh), pygame.SRCALPHA)
-    surf.blit(_sheet, (0, 0), (sx, sy, sw, sh))
+    surf.blit(sheet, (0, 0), (sx, sy, sw, sh))
     return pygame.transform.scale(surf, (max(1, int(sw * scale)), max(1, int(sh * scale))))
+
+
+import pygame
+
+import pygame
+
+def invert_surface(surface):
+    pixels = pygame.surfarray.pixels3d(surface)
+    pixels[:] = 255 - pixels
+    return surface
 
 img_standing = crop_sprite(1679, 3, 88, 94)
 img_run1 = crop_sprite(1943, 3, 88, 94)
@@ -61,8 +71,8 @@ large_cacti = [
     crop_sprite(850, 4, 100, 96),
 ]
 
-_ground_strip = crop_sprite(3, 105, 2400, 16, scale=1.0)
-ground_scaled = pygame.transform.scale(_ground_strip, (2400, 14))
+ground_strip = crop_sprite(3, 105, 2400, 16, scale=1.0)
+ground_scaled = pygame.transform.scale(ground_strip, (2400, 14))
 ground_width = ground_scaled.get_width()
 
 font_imgs = [crop_sprite(1294 + i * 21, 2, 21, 21, scale=12/21) for i in range(10)]
@@ -80,6 +90,7 @@ duck_w = img_duck1.get_width()
 duck_h = img_duck1.get_height()
 normal_height = DINO_H
 duck_height = duck_h 
+is_night = True
 is_ducking = False
 current_image = img_standing
 
@@ -96,7 +107,7 @@ pygame.time.set_timer(SPAWN_CACTUS_EVENT, 2000)
 pygame.time.set_timer(ANIMATION_EVENT, 100)
 pygame.time.set_timer(BIRD_ANIM_EVENT, 150)
 
-BIRD_HEIGHTS = [130, 158, 175]
+BIRD_HEIGHTS = [180, 158, 175]
 
 def spawn_cactus_group():
     bird_chance = min(0.4, 0.05 + (difficulty / 100) * 0.35)
@@ -179,11 +190,30 @@ while True:
         speed = 4
         current_image = img_run1
 
+    last_switch = 0
+    
     while running:
         score_time = 0
         if game_started:
             score_time = (pygame.time.get_ticks() - start_ticks) // 100
             difficulty = min(100, score_time / 5)
+            print(score_time)
+        
+        if score_time % 200 == 0 and last_switch != score_time:
+            img_standing = invert_surface(img_standing)
+            img_run1 = invert_surface(img_run1)
+            img_run2 = invert_surface(img_run2)
+            img_duck1 = invert_surface(img_duck1)
+            img_duck2 = invert_surface(img_duck2)
+            img_bird1 = invert_surface(img_bird1)
+            img_bird2 = invert_surface(img_bird2)
+            #small_cacti = invert_surface(small_cacti)
+            #large_cacti = invert_surface(large_cacti)
+            ground_scaled = invert_surface(ground_scaled)
+            #font_imgs = invert_surface(font_imgs)
+            #hi_img = invert_surface(hi_img)
+            last_switch = score_time
+
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -315,7 +345,7 @@ while True:
 
                     running = False
 
-        screen.fill((255, 255, 255))
+        screen.fill((255, 255, 255)) # LAST CHANGE HERE IS BACKGROUND NOTE FOR NIHGT
         screen.blit(ground_scaled, (ground_x1, 207))
         screen.blit(ground_scaled, (ground_x2, 207))
 
