@@ -8,16 +8,16 @@ def log_in(information):
     #Put into loop
     while True:
         #Ask them what they want to sign into, or if they want to quit
-        sign_in = input("Do you want to sign in? If you do put yes, otherwise type quit:").strip().lower()
+        sign_in = input("Do you want to sign in? If you do put yes, otherwise type exit:").strip().lower()
         #Get correct input
-        if sign_in == "yes" or sign_in == "quit":
+        if sign_in == "yes" or sign_in == "exit":
             break
-    if sign_in == "quit":
-        return information, "quit"
+    if sign_in == "exit":
+        return information, "exit"
     #Put into a loop
     while True:
         fix = False
-        username = input("Please enter your username (put quit if you want to exit):")
+        username = input("Please enter your username (put quit if you want to exit):").strip()
         #Then allow them to input passwords with an option to quit
         for i in information:
             if i["username"] == username:
@@ -25,34 +25,51 @@ def log_in(information):
                 break
         if fix == True:
             break
-        if username == "quit":
-            return information, "quit"
+        if username == "exit":
+            return information, "exit"
         else: 
             print("That username doesn't exist...")
     while True:
             #if they entered a correct username, ask them for there password or quit
-            password = input("Please tell me the password (Put quit if you want to exit):")
+            password = input("Please tell me the password (Put quit if you want to exit):").strip()
                            #Check hashed password 
             mixer = hashlib.shake_128()
             h_password = password.encode('utf-8')
             mixer.update(h_password)
-            f_password = mixer.hexdigest(16)
-            if password == "quit":
-                return information, "quit"
+            f_password = str(mixer.hexdigest(4))
+            if password == "exit":
+                return information, "exit"
             for i in information:
-                if f_password == list(i[username])[0]:
-                    list(i[username])[1] = "Active"
+                if f_password == i["password"]:
+                    i["status"] = "Active"
                     return information, "game"
             else:
                 print("That is not the correct password...")
 
 
 def view_delete(information):
-    pass
     #This will allow the admin to view highscores and all acounts
+    x = 0
+    for i in information:
+        x+= 1
+        print(f"{x}. Username: {i["username"]} \n   Password: {i["password"]} \n   Online Status: {i["status"]} \n   Highscore: {i["highscore"]}")
     #Also make it so that they can delete acounts
-
-#Example of values
-#[{"username": username
-#  "highscore": 357
-#  "status": inactive}]
+    while True:
+        choice = input("Would you like to remove an account or go back to main? (To remove put remove, To go back to main put exit):").strip().lower()
+        if choice == "remove":
+            break
+        elif choice == "exit":
+            return information
+        else:
+            print("That is not an available input...")
+    while True:
+        num = input("Please put the number of the account you want to remove (If you want to exit, put exit):").strip()
+        if int(num) >= 1 and int(num) <= len(information) and num.isdigit() == True:
+            num = int(num)
+            break
+        elif num == "exit":
+            return information
+        else:
+            print("That is not a valid input...")
+    information.pop(num-1)
+    return information
