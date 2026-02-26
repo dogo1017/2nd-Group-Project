@@ -1,19 +1,34 @@
 # MR 1st High Score Tracker
 import csv
 
-high_score = ()
+filename = "user_info.csv"
 
 def high_score_tracker():
     pass
-    def display_high_score():
+    
+def display_high_score():
         pass
-        def save_scores():
-            def load_scores():
+        
+def save_scores():
+            pass
+            
+def load_scores():
 
-    pass
 
-def update_leaderboard():
-    pass
+    scores = {}
+def update_leaderboard(name, new_score):
+    scores = load_scores()
+    if name in scores:
+        if new_score > score[name]:
+            score[name] = new_score
+            print(f"New high score for {name}!")
+        else:
+            print(f"Score of {new_score} didn't beat your record of {scores[name]}")
+
+    else:
+        scores[name] = new_score
+        print(f"First score recorded for {name}!")
+    save_scores(scores)
 
 dinosaur_game = ""
 
