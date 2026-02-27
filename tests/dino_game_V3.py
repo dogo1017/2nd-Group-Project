@@ -82,6 +82,7 @@ DINO_W = img_standing.get_width()
 DINO_H = img_standing.get_height()
 player = pygame.Rect(50, 0, DINO_W, DINO_H)
 
+background = [255,255,255]
 velocity_y = 0
 gravity = 0.6
 ground_y = 225 - DINO_H
@@ -317,7 +318,7 @@ while True:
                                     pygame.quit()
                                     exit()
 
-                        screen.fill((255, 255, 255))
+                        screen.fill(background)
                         screen.blit(ground_scaled, (ground_x1, 207))
                         screen.blit(ground_scaled, (ground_x2, 207))
                         screen.blit(img_standing, player.topleft)
@@ -345,7 +346,7 @@ while True:
 
                     running = False
 
-        screen.fill((255, 255, 255)) # LAST CHANGE HERE IS BACKGROUND NOTE FOR NIHGT
+        screen.fill(background) 
         screen.blit(ground_scaled, (ground_x1, 207))
         screen.blit(ground_scaled, (ground_x2, 207))
 
@@ -366,7 +367,7 @@ while True:
             if curtain_left < screen_width:
                 curtain_w = screen_width - curtain_left
                 curtain_surf = pygame.Surface((curtain_w, screen_height))
-                curtain_surf.fill((255, 255, 255))
+                curtain_surf.fill(background)
                 line1 = instr_font.render("SPACE / UP  -  Jump", True, (83, 83, 83))
                 line2 = instr_font.render("DOWN  -  Duck",   True, (83, 83, 83))
                 line3 = instr_font.render("Dodge cacti and birds!", True, (83, 83, 83))
