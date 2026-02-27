@@ -1,10 +1,9 @@
 #RC 1st, my pseducode
 
 #Import hashlib
+import hashlib
 
 #Create function for logging in
-    #Put the csv into a list of dictionarys
-
     #Put into loop
         #Ask them what they want to sign into, or if they want to quit
         #Get correct input
