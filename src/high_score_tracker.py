@@ -1,49 +1,50 @@
 # MR 1st High Score Tracker
 import csv
+import os
 
-filename = "user_info.csv"
+FILENAME = "user_info.csv"
 
-def high_score_tracker():
-    pass
-    
-def display_high_score():
-        pass
-        
-def save_scores():
-            pass
-            
 def load_scores():
-
-
+    """Loads scores from CSV into a dictionary {name: score}."""
     scores = {}
-def update_leaderboard(name, new_score):
+    if not os.path.exists(FILENAME):
+        return scores
+    
+    with open(FILENAME, mode='r', newline='') as file:
+        reader = csv.reader(file)
+        for row in reader:
+            if row: # Check for empty rows
+                name, score = row[0], int(row[1])
+                scores[name] = score
+    return scores
+
+def update_high_scores(username, new_score):
+    """Updates the dictionary and saves to CSV after sorting."""
     scores = load_scores()
-    if name in scores:
-        if new_score > score[name]:
-            score[name] = new_score
-            print(f"New high score for {name}!")
-        else:
-            print(f"Score of {new_score} didn't beat your record of {scores[name]}")
+    
+    # Only update if the user is new or the new score is higher
+    if username not in scores or new_score > scores[username]:
+        scores[username] = new_score
+        
+    # 1. Convert dictionary to a list of tuples to sort by score (value)
+    # 2. Sort descending (reverse=True)
+    sorted_scores = sorted(scores.items(), key=lambda item: item[1], reverse=True)
+    
+    # Save the full updated list back to the CSV
+    with open(FILENAME, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerows(sorted_scores)
 
-    else:
-        scores[name] = new_score
-        print(f"First score recorded for {name}!")
-    save_scores(scores)
+def display_top_scores(limit=5):
+    """Loads and displays the top N high scores."""
+    scores = load_scores()
+    # Sort for display purposes
+    sorted_scores = sorted(scores.items(), key=lambda item: item[1], reverse=True)
+    
+    print(f"\n--- TOP {limit} HIGH SCORES ---")
+    for i, (name, score) in enumerate(sorted_scores[:limit], 1): # Slicing for top N
+        print(f"{i}. {name}: {score}")
 
-dinosaur_game = ""
-
-def main():
+def menu():
     while True:
-        print("Welcome to the HIGH SCORE TRACKER!")
-        print("Here you can play the dinosaur game and compare your high score to other users!")
-        choice = input("Would you like to play, view your high score, or view leaderboard")
-        if choice == '1':
-            dinosaur_game()
-        elif choice == '2':
-            pass
-        elif choice == '3':
-            pass
-        else:
-            break
-
-main()
+        pass
