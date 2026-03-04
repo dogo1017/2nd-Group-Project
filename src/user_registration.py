@@ -4,12 +4,15 @@ import hashlib
 import csv
 
 def register(users):
-    while True:
+    valid_user = False
+    while valid_user == False:
         username = input("Please input a username: ")
         for user in users:
             if user["username"] == username: 
                 print("There is already a user with that name.")
                 continue
+            else:
+                valid_user = True
         password = input("Please input a password: ")
         password_encoded = password.encode("utf-8")
         hashed_password = hashlib.shake_128(password_encoded)
