@@ -143,7 +143,7 @@ instr_font = pygame.font.SysFont(None, 30)
 
 try:
     restart_img = pygame.transform.scale(
-        pygame.image.load('src/dino_game_folder/images/restart.png').convert_alpha(), (60, 60))
+        crop_sprite(131,506,72,64).convert_alpha(), (60, 60))
 except Exception:
     restart_img = None
 
