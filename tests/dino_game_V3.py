@@ -37,7 +37,7 @@ screen = pygame.display.set_mode((1000, 250))
 pygame.display.set_caption("Dino Game")
 screen_width, screen_height = 1000, 250
 
-sheet = pygame.image.load('src/dino_game_folder/images/sprite_sheet.png').convert_alpha()
+sheet = pygame.image.load('src/dino_game_assets/images/sprite_sheet.png').convert_alpha()
 
 def crop_sprite(sx, sy, sw, sh, scale=0.5):
     surf = pygame.Surface((sw, sh), pygame.SRCALPHA)
@@ -95,8 +95,8 @@ is_night = True
 is_ducking = False
 current_image = img_standing
 
-jump_sfx = pygame.mixer.Sound('src/dino_game_folder/sounds/jump.mp3')
-point_sfx = pygame.mixer.Sound('src/dino_game_folder/sounds/point.mp3')
+jump_sfx = pygame.mixer.Sound('src/dino_game_assets/sounds/jump.mp3')
+point_sfx = pygame.mixer.Sound('src/dino_game_assets/sounds/point.mp3')
 
 obstacles = []
 speed = 0
@@ -143,7 +143,7 @@ instr_font = pygame.font.SysFont(None, 30)
 
 try:
     restart_img = pygame.transform.scale(
-        pygame.image.load('src/dino_game_folder/images/restart.png').convert_alpha(), (60, 60))
+        crop_sprite(131,506,72,64).convert_alpha(), (60, 60))
 except Exception:
     restart_img = None
 
@@ -330,8 +330,7 @@ while True:
                                 screen.blit(o['image'], o['rect'].topleft)
 
                         pygame.draw.rect(screen, (180, 180, 180), restart_rect)
-                        if restart_img:
-                            screen.blit(restart_img, restart_rect.topleft)
+                        screen.blit(restart_img, restart_rect.topleft)
 
                         quit_surf = ui_font.render("QUIT", True, (0, 0, 0))
                         pygame.draw.rect(screen, (200, 200, 200), quit_rect)
