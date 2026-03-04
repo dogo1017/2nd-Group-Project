@@ -4,6 +4,7 @@ import os
 
 FILENAME = "user_info.csv"
 
+
 def load_scores():
     """Loads scores from CSV into a dictionary {name: score}."""
     scores = {}
