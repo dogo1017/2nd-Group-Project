@@ -13,7 +13,7 @@ def register(users):
         password = input("Please input a password: ")
         password_encoded = password.encode("utf-8")
         hashed_password = hashlib.shake_128(password_encoded)
-        hex_password = hashed_password.hexdigest()
+        hex_password = hashed_password.hexdigest(4)
         users.append({"username" : username, "password" : hex_password, "high score" : 0, "status" : "active"})
         return users
     
@@ -33,4 +33,12 @@ def load_csv():
             headers = next(content)
         rows = []
         for line in content:
-            rows.append({headers[0] : line[0], headers[1]})
+            rows.append({headers[0] : line[0], headers[1] : line[1], headers[2] : line[2], headers[4] : line[4]})
+        return rows
+    
+def save_changes(users):
+    feildnames = ["username", "password", "high score", "status"]
+    with open("docs/user_info.csv", "w", newline = "") as user_list:
+        writer = csv.DictWriter(user_list, fieldnames = feildnames)
+        writer.writeheader()
+        writer.writerows(users)
