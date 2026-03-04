@@ -33,7 +33,7 @@ def load_csv():
             headers = next(content)
         rows = []
         for line in content:
-            rows.append({headers[0] : line[0], headers[1] : line[1], headers[2] : line[2], headers[4] : line[4]})
+            rows.append({headers[0] : line[0], headers[1] : line[1], headers[2] : line[2], headers[3] : line[3]})
         return rows
     
 def save_changes(users):
