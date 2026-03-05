@@ -86,3 +86,27 @@ def sign_out(information):
             i["status"] = "inactive"
     return information
 
+
+
+
+top_scores = []
+top_user = []
+scores = []
+user = []
+for i in information:
+    scores.append(int(i["high score"]))
+    user.append(i["username"])
+
+top_scores = sorted(scores, reverse = True)[:5]
+
+
+
+for score in top_scores:
+    for i in information:
+        if int(i["high score"]) == score:
+            top_user.append(i["username"])
+
+
+print(top_scores)
+print(top_user)
+
