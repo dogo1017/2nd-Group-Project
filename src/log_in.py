@@ -2,7 +2,8 @@
 
 #Import hashlib
 import hashlib
-
+from user_registration import *
+information = load_csv()
 #Create function for logging in
 def log_in(information):
     information = sign_out(information)
@@ -54,7 +55,7 @@ def view_delete(information):
     x = 0
     for i in information:
         x+= 1
-        print(f"{x}. Username: {i["username"]} \n   Password: {i["password"]} \n   Online Status: {i["status"]} \n   Highscore: {i["high score"]}")
+        print(f"{x}. Username: {i['username']} \n   Password: {i['password']} \n   Online Status: {i['status']} \n   Highscore: {i['high score']}")
     #Also make it so that they can delete acounts
     while True:
         choice = input("Would you like to remove an account or go back to main? (To remove put remove, To go back to main put exit):").strip().lower()
@@ -84,3 +85,4 @@ def sign_out(information):
         if i["status"] == "active":
             i["status"] = "inactive"
     return information
+
