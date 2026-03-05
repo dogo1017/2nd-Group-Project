@@ -5,6 +5,7 @@ import hashlib
 
 #Create function for logging in
 def log_in(information):
+    information = sign_out(information)
     #Put into loop
     while True:
         #Ask them what they want to sign into, or if they want to quit
@@ -41,18 +42,19 @@ def log_in(information):
                 return information, "exit"
             for i in information:
                 if f_password == i["password"]:
-                    i["status"] = "Active"
+                    i["status"] = "active"
                     return information, "game"
             else:
                 print("That is not the correct password...")
 
 
 def view_delete(information):
+
     #This will allow the admin to view highscores and all acounts
     x = 0
     for i in information:
         x+= 1
-        print(f"{x}. Username: {i["username"]} \n   Password: {i["password"]} \n   Online Status: {i["status"]} \n   Highscore: {i["highscore"]}")
+        print(f"{x}. Username: {i["username"]} \n   Password: {i["password"]} \n   Online Status: {i["status"]} \n   Highscore: {i["high score"]}")
     #Also make it so that they can delete acounts
     while True:
         choice = input("Would you like to remove an account or go back to main? (To remove put remove, To go back to main put exit):").strip().lower()
@@ -72,4 +74,13 @@ def view_delete(information):
         else:
             print("That is not a valid input...")
     information.pop(num-1)
+    return information
+
+
+
+def sign_out(information):
+    #Go through and check each to make sure that they are signed out
+    for i in information:
+        if i["status"] == "active":
+            i["status"] = "inactive"
     return information
