@@ -52,11 +52,13 @@ def run_game(high_score):
                     try:
                         subprocess.check_call([sys.executable, "-m", "pip", "install", "numpy"])
                         print("NumPy installed successfully.")
-                        import numpy as np
+                        numpy_installed = True
+                        import numpy
                     except subprocess.CalledProcessError as e:
                         print(f"Failed to install NumPy: {e}")
                     except ImportError:
                         print("NumPy still failed to import after installation attempt.")
+                        numpy_installed = False
                     break
             
             else:
@@ -216,7 +218,7 @@ def run_game(high_score):
                 score_time = (pygame.time.get_ticks() - start_ticks) // 100
                 difficulty = min(100, score_time / 5)
 
-            if score_time % 200 == 0 and last_switch != score_time:
+            if score_time % 700 == 0 and last_switch != score_time:
                 if numpy_installed == True:
                     img_standing = invert_surface(img_standing)
                     img_run1 = invert_surface(img_run1)
