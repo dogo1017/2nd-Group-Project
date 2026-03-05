@@ -1,8 +1,7 @@
 import pygame
 import random
-import os
-import time
-
+import subprocess
+import sys
 
 # NOTES FOR SELF (IGNORE)
 
@@ -38,6 +37,31 @@ screen_width, screen_height = 1000, 250
 sheet = pygame.image.load('src/dino_game_assets/images/sprite_sheet.png').convert_alpha()
 
 def run_game(high_score):
+
+    try:
+        import numpy
+        numpy_installed = True
+    except:
+        numpy_installed = False
+    if numpy_installed == False:
+        while True:
+            auto_install = input("It seems you are missing a numpy, which is a library that is required for some features in the game, it is not required but will provide a better experience, would you like to install numpy automatically(y/n): ").lower().strip()
+
+            if auto_install == 'y':
+                    print("Installing now...")
+                    try:
+                        subprocess.check_call([sys.executable, "-m", "pip", "install", "numpy"])
+                        print("NumPy installed successfully.")
+                        import numpy as np
+                    except subprocess.CalledProcessError as e:
+                        print(f"Failed to install NumPy: {e}")
+                    except ImportError:
+                        print("NumPy still failed to import after installation attempt.")
+                    break
+            
+            else:
+                break
+
 
     def crop_sprite(sx, sy, sw, sh, scale=0.5):
         surf = pygame.Surface((sw, sh), pygame.SRCALPHA)
@@ -192,20 +216,21 @@ def run_game(high_score):
                 difficulty = min(100, score_time / 5)
 
             if score_time % 200 == 0 and last_switch != score_time:
-                img_standing = invert_surface(img_standing)
-                img_run1 = invert_surface(img_run1)
-                img_run2 = invert_surface(img_run2)
-                img_duck1 = invert_surface(img_duck1)
-                img_duck2 = invert_surface(img_duck2)
-                img_bird1 = invert_surface(img_bird1)
-                img_bird2 = invert_surface(img_bird2)
+                if numpy_installed == True:
+                    img_standing = invert_surface(img_standing)
+                    img_run1 = invert_surface(img_run1)
+                    img_run2 = invert_surface(img_run2)
+                    img_duck1 = invert_surface(img_duck1)
+                    img_duck2 = invert_surface(img_duck2)
+                    img_bird1 = invert_surface(img_bird1)
+                    img_bird2 = invert_surface(img_bird2)
 
-                #small_cacti = invert_surface(small_cacti)
-                #large_cacti = invert_surface(large_cacti)
-                ground_scaled = invert_surface(ground_scaled)
-                #font_imgs = invert_surface(font_imgs)
-                #hi_img = invert_surface(hi_img)
-                last_switch = score_time
+                    #small_cacti = invert_surface(small_cacti)
+                    #large_cacti = invert_surface(large_cacti)
+                    ground_scaled = invert_surface(ground_scaled)
+                    #font_imgs = invert_surface(font_imgs)
+                    #hi_img = invert_surface(hi_img)
+                    last_switch = score_time
 
 
             for event in pygame.event.get():
@@ -308,7 +333,7 @@ def run_game(high_score):
                                         dead = False
                                     if quit_rect.collidepoint(mx, my):
                                         pygame.quit()
-                                        exit()
+                                        return high_score
 
                             screen.fill(background)
                             screen.blit(ground_scaled, (ground_x1, 207))
