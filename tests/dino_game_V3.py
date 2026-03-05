@@ -101,7 +101,6 @@ def run_game(high_score):
     DINO_H = img_standing.get_height()
     player = pygame.Rect(50, 0, DINO_W, DINO_H)
 
-    background = [255,255,255]
     velocity_y = 0
     gravity = 0.6
     ground_y = 225 - DINO_H
@@ -110,13 +109,14 @@ def run_game(high_score):
     duck_h = img_duck1.get_height()
     normal_height = DINO_H
     duck_height = duck_h 
-    is_night = True
+    is_night = False
     is_ducking = False
     current_image = img_standing
 
     jump_sfx = pygame.mixer.Sound('src/dino_game_assets/sounds/jump.mp3')
     point_sfx = pygame.mixer.Sound('src/dino_game_assets/sounds/point.mp3')
 
+    background = [255,255,255]
     obstacles = []
     speed = 0
 
@@ -176,6 +176,7 @@ def run_game(high_score):
     score_time = 0
 
     while True:
+
         if score_time > high_score:
             high_score = score_time
 
@@ -231,6 +232,20 @@ def run_game(high_score):
                     #font_imgs = invert_surface(font_imgs)
                     #hi_img = invert_surface(hi_img)
                     last_switch = score_time
+                    if is_night == True:
+                        is_night = False
+                    else:
+                        is_night = True
+            
+            if is_night and numpy_installed:
+                for i in range(len(background)):
+                    if background[i] > 0:
+                        background[i] -= 1
+            else:
+                for i in range(len(background)):
+                    if background[i] < 250:
+                            background[i] += 1
+
 
 
             for event in pygame.event.get():
