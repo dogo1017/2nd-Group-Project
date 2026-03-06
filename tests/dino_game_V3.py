@@ -218,7 +218,7 @@ def run_game(high_score):
                 score_time = (pygame.time.get_ticks() - start_ticks) // 100
                 difficulty = min(100, score_time / 5)
 
-            if score_time % 700 == 0 and last_switch != score_time:
+            if score_time % 300 == 0 and last_switch != score_time:
                 if numpy_installed == True:
                     img_standing = invert_surface(img_standing)
                     img_run1 = invert_surface(img_run1)
@@ -227,12 +227,22 @@ def run_game(high_score):
                     img_duck2 = invert_surface(img_duck2)
                     img_bird1 = invert_surface(img_bird1)
                     img_bird2 = invert_surface(img_bird2)
-
+                    for i in small_cacti:
+                        small_cacti = [invert_surface(crop_sprite(447 + i * 34, 3, 34, 66)) for i in range(6)]
+                    for i in large_cacti:
+                            large_cacti = [
+                                invert_surface(crop_sprite(654, 4, 46, 96)),
+                                invert_surface(crop_sprite(704, 4, 44, 96)),
+                                invert_surface(crop_sprite(754, 4, 46, 96)),
+                                invert_surface(crop_sprite(804, 4, 44, 96)),
+                                invert_surface(crop_sprite(850, 4, 100, 96))
+                            ]
+                            
                     #small_cacti = invert_surface(small_cacti)
                     #large_cacti = invert_surface(large_cacti)
                     ground_scaled = invert_surface(ground_scaled)
-                    #font_imgs = invert_surface(font_imgs)
-                    #hi_img = invert_surface(hi_img)
+                    font_imgs = [invert_surface(crop_sprite(1294 + i * 21, 2, 21, 21, scale=12/21)) for i in range(10)]
+                    hi_img = invert_surface(hi_img)
                     last_switch = score_time
                     if is_night == True:
                         is_night = False
@@ -244,9 +254,11 @@ def run_game(high_score):
                     if background[i] > 0:
                         background[i] -= 1
             else:
+                font_imgs = [crop_sprite(1294 + i * 21, 2, 21, 21, scale=12/21) for i in range(10)]
                 for i in range(len(background)):
                     if background[i] < 250:
                             background[i] += 1
+                    
 
 
 
@@ -370,9 +382,9 @@ def run_game(high_score):
                             pygame.draw.rect(screen, (200, 200, 200), quit_rect)
                             screen.blit(quit_surf, (quit_rect.x + 8, quit_rect.y + 7))
 
-                            screen.blit(hi_img, (820, 15))
-                            draw_score(screen, high_score, 848, 15)
-                            draw_score(screen, score_time, 930, 15)
+                            screen.blit(hi_img, (390, 80))
+                            draw_score(screen, high_score, 505, 80)
+                            draw_score(screen, score_time, 422, 80)
 
                             pygame.display.flip()
                             clock.tick(60)
