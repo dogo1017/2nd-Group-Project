@@ -1,40 +1,82 @@
 # MAIN FUNCTION
 from log_in import *
+from dino_game import *
 from high_score_tracker import *
 from user_registration import *
 
 
 def main():
-    current_user = None
     while True:
         information = load_csv()
         print("Welcome to the High Score Tracker!")
-        print(" 1. Log in")
-        print(" 2. Create an Account")  
-        print(" 3. Quit")      
+        print("1. Log in")
+        print("2. Create an Account")  
+        print("3. Quit")      
         user_choice = input("What would you like to do?")
         if user_choice == '1':
-
-            information, text =log_in(information)
-            if text == 'game':
+            information,text =log_in(information)
+            if text == "exit":
+                pass
+            else:
                 for i in information:
                     if i["status"] == 'active':
                         if i["username"] == "admin":
-                            pass
+                            while True:
+                                #View leaderboared, go back to main, play, view/delete
+                                options = ["View leaderboard",  "Play the game", "View all users and delete them if you want", "Go back to main"]
+                                for i in range(4):
+                                    print(f"{i+1}. {options[i]}")
+
+                                num = input("Please pick one of the options:").strip().lower()
+                                if num.isdigit() == True:
+                                    num = int(num)
+                                    if num == 1:
+                                        display_high_scores(information)
+                                    elif num == 2:
+                                        run_game(int(i["high score"]))
+                                    elif num == 3:
+                                        information = view_delete(information)
+                                    elif num == 4:
+                                        break
+                                    else:
+                                        print("Please put a number 1-4...")
+                                else:
+                                    print("Please enter a valid number")
                         else:
-                            pass
+                            while True:
+                                options = ["View leaderboard",  "Play the game", "Go back to main"]
+                                for i in range(3):
+                                    print(f"{i+1}. {options[i]}")
+
+                                num = input("Please pick one of the options:").strip().lower()
+                                if num.isdigit() == True:
+                                    num = int(num)
+                                    if num == 1:
+                                        display_high_scores(information)
+                                    elif num == 2:
+                                        run_game(int(i["high score"]))
+                                    elif num == 3:
+                                        break
+                                    else:
+                                        print("Please put a number 1-3...")
+                                else:
+                                    print("Please enter a valid number")
+                    else:
+                        pass
 
 
 
         elif user_choice == '2':
-            register()
+            information = register(information)
+
+
         elif user_choice == '3':
-            
-            save_changes()
+            information = sign_out(information)
+            save_changes(information)
             print("Thank you for playing!")
             break
         else:
             print("Please enter a valid choice")
-        save_changes()
+        save_changes(information)
 
 main()
