@@ -29,8 +29,13 @@ def display_high_scores(information):
     top_scores, top_user = leader_board(information)
     print("--------------------LEADER BOARD--------------------")
     print("These are the top 5 High Scores !")
-    for x in range(5):
-        print(f"{x+1}: {top_user[x]}, {top_scores[x]}")
+    if len(top_scores) >= 5:
+        for x in range(5):
+            print(f"{x+1}: {top_user[x]}, {top_scores[x]}")
+    else:
+        for x in range(len(top_scores)):
+            print(f"{x+1}: {top_user[x]}, {top_scores[x]}")
+    print("\n")
 
 
 
