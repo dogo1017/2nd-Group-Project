@@ -45,8 +45,8 @@ def main():
                         else:
                             while True:
                                 options = ["View leaderboard",  "Play the game", "Go back to main"]
-                                for i in range(3):
-                                    print(f"{i+1}. {options[i]}")
+                                for x in range(3):
+                                    print(f"{x+1}. {options[x]}")
 
                                 num = input("Please pick one of the options:").strip().lower()
                                 if num.isdigit() == True:

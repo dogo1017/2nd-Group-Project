@@ -29,14 +29,15 @@ import sys
 # pygame.mouse.get_pos() - (x, y) of current mouse position
 
 
-pygame.init()
-screen = pygame.display.set_mode((1000, 250))
-pygame.display.set_caption("Dino Game")
-screen_width, screen_height = 1000, 250
-
-sheet = pygame.image.load('src/dino_game_assets/images/sprite_sheet.png').convert_alpha()
 
 def run_game(high_score):
+
+    pygame.init()
+    screen = pygame.display.set_mode((1000, 250))
+    pygame.display.set_caption("Dino Game")
+    screen_width, screen_height = 1000, 250
+
+    sheet = pygame.image.load('src/dino_game_assets/images/sprite_sheet.png').convert_alpha()
 
     try:
         import numpy
@@ -96,7 +97,7 @@ def run_game(high_score):
     ground_scaled = pygame.transform.scale(ground_strip, (2400, 14))
     ground_width = ground_scaled.get_width()
 
-    font_imgs = [crop_sprite(1294 + i * 21, 2, 21, 21, scale=12/21) for i in range(10)]
+    font_imgs = [crop_sprite(1295 + i * 21, 3, 21, 18, scale=12/21) for i in range(10)]
     hi_img = crop_sprite(1294 + 10 * 21, 2, 42, 21, scale=24/42)
 
     DINO_W = img_standing.get_width()
@@ -241,8 +242,7 @@ def run_game(high_score):
                     #small_cacti = invert_surface(small_cacti)
                     #large_cacti = invert_surface(large_cacti)
                     ground_scaled = invert_surface(ground_scaled)
-                    font_imgs = [invert_surface(crop_sprite(1294 + i * 21, 2, 21, 21, scale=12/21)) for i in range(10)]
-                    hi_img = invert_surface(hi_img)
+                    font_imgs = [invert_surface(crop_sprite(1295 + i * 20, 3, 19, 21, scale=12/21)) for i in range(10)]
                     last_switch = score_time
                     if is_night == True:
                         is_night = False
@@ -254,7 +254,7 @@ def run_game(high_score):
                     if background[i] > 0:
                         background[i] -= 1
             else:
-                font_imgs = [crop_sprite(1294 + i * 21, 2, 21, 21, scale=12/21) for i in range(10)]
+                font_imgs = [crop_sprite(1295 + i * 20, 3, 19, 21, scale=12/21) for i in range(10)]
                 for i in range(len(background)):
                     if background[i] < 250:
                             background[i] += 1
