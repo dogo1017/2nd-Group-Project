@@ -39,10 +39,10 @@ def display_high_scores(information):
 
 
 
-def saving_high_score(high_score, users):
+def saving_high_score(high_score, username, users):
     for user in users:
-        if user["status"] == "active":
-           user["highscore"] = str(high_score)
-           return users
-
-
+        if user["status"] == "active" and user["username"] == username:
+            if int(high_score) > int(user["high score"]):
+                user["high score"] = str(high_score)
+            break
+    return users

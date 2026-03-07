@@ -485,7 +485,10 @@ def run_game(high_score):
                             for e in pygame.event.get():
                                 if e.type == pygame.QUIT:
                                     pygame.quit()
-                                    exit()
+                                    if score_time > high_score:
+                                        return score_time
+                                    else:
+                                        return high_score
                                 if e.type == BIRD_ANIM_EVENT:
                                     bird_frame = 1 - bird_frame
                                 if e.type == pygame.MOUSEBUTTONDOWN:
@@ -493,7 +496,10 @@ def run_game(high_score):
                                         dead = False
                                     if quit_rect.collidepoint(mx, my):
                                         pygame.quit()
-                                        return high_score
+                                        if score_time > high_score:
+                                            return score_time
+                                        else:
+                                            return high_score
 
                             screen.fill(background)
                             draw_background_elements(screen)
@@ -564,5 +570,3 @@ def run_game(high_score):
 
             pygame.display.flip()
             clock.tick(60)
-
-    pygame.quit()
