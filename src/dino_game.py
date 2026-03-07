@@ -305,6 +305,7 @@ def run_game(high_score):
                     img_duck2 = invert_surface(img_duck2)
                     img_bird1 = invert_surface(img_bird1)
                     img_bird2 = invert_surface(img_bird2)
+                    hi_img = invert_surface(hi_img)
                     if is_night:
                         small_cacti = make_small_cacti()
                         large_cacti = make_large_cacti()
@@ -325,6 +326,7 @@ def run_game(high_score):
                         star_type_counter = 0
                     else:
                         star_objects.clear()
+                        hi_img = hi_img = crop_sprite(1495, 3, 42, 21, scale=24/42)
 
             if is_night and numpy_installed:
                 for i in range(3):
