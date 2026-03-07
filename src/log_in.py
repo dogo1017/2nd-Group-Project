@@ -1,90 +1,121 @@
-#RC 1st, my code
+# login.py
 
-#Import hashlib
 import hashlib
 from user_registration import *
+import os
+
+# Helper function to clear the console
+def clear():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+
 information = load_csv()
-#Create function for logging in
+
+# Function for logging in
 def log_in(information):
     information = sign_out(information)
-    #Put into loop
+
+    # Loop to get username
     while True:
-        #Ask them what they want to sign into, or if they want to quit
-        sign_in = input("Do you want to sign in? If you do put yes, otherwise type exit:").strip().lower()
-        #Get correct input
-        if sign_in == "yes" or sign_in == "exit":
-            break
-    if sign_in == "exit":
-        return information, "exit"
-    #Put into a loop
-    while True:
-        fix = False
-        username = input("\nPlease enter your username (put exit if you want to exit):").strip()
-        #Then allow them to input passwords with an option to quit
+        clear()
+        username = input("Please enter your username (or type 'exit' to go back): ").strip()
+        if username.lower() == "exit":
+            return information, "exit"
+
+        user_found = False
         for i in information:
             if i["username"] == username:
-                fix = True
+                user_found = True
                 break
-        if fix == True:
+        if user_found:
             break
-        if username == "exit":
-            return information, "exit"
-        else: 
-            print("That username doesn't exist...")
+        else:
+            print("Username does not exist. Please try again.")
+            input("Press Enter to continue...")
+
+    # Loop to get password
     while True:
-            #if they entered a correct username, ask them for there password or quit
-            password = input("\nPlease tell me the password (Put exit if you want to exit):").strip()
-                           #Check hashed password 
-            mixer = hashlib.shake_128()
-            h_password = password.encode('utf-8')
-            mixer.update(h_password)
-            f_password = str(mixer.hexdigest(4))
-            if password == "exit":
-                return information, "exit"
-            for i in information:
-                if f_password == i["password"]:
-                    i["status"] = "active"
-                    return information, "game"
-            else:
-                print("That is not the correct password...")
+        clear()
+        password = input("Please enter your password (or type 'exit' to go back): ").strip()
+        if password.lower() == "exit":
+            return information, "exit"
+
+        # Hash the input password
+        mixer = hashlib.shake_128()
+        mixer.update(password.encode('utf-8'))
+        f_password = str(mixer.hexdigest(4))
+
+        correct = False
+        for i in information:
+            if f_password == i["password"]:
+                i["status"] = "active"
+                correct = True
+                break
+
+        if correct:
+            clear()
+            return information, "game"
+        else:
+            print("Incorrect password. Please try again.")
+            input("Press Enter to continue...")
 
 
 def view_delete(information):
-
-    #This will allow the admin to view highscores and all acounts
-    x = 0
-    for i in information:
-        x+= 1
-        print(f"{x}. Username: {i['username']} \n   Password: {i['password']} \n   Online Status: {i['status']} \n   Highscore: {i['high score']}")
-    #Also make it so that they can delete acounts
     while True:
-        choice = input("\nWould you like to remove an account or go back to main? (To remove put remove, To go back to main put exit):").strip().lower()
-        if choice == "remove":
-            break
-        elif choice == "exit":
+        clear()
+        # Display all accounts
+        for idx, i in enumerate(information, start=1):
+            print(f"{idx}. Username: {i['username']}  |  Status: {i['status']}  |  Highscore: {i['high score']}")
+        
+        choice = input("\nType 'remove' to delete an account, or 'exit' to go back: ").strip().lower()
+        if choice == "exit":
             return information
+        elif choice == "remove":
+            while True:
+                num = input("Enter the number of the account to remove (or 'exit' to go back): ").strip()
+                if num.lower() == "exit":
+                    break
+                if num.isdigit() and 1 <= int(num) <= len(information):
+                    information.pop(int(num)-1)
+                    print("Account removed successfully!")
+                    input("Press Enter to continue...")
+                    break
+                else:
+                    print("Invalid input. Try again.")
         else:
-            print("That is not an available input...")
-    while True:
-        num = input("\nPlease put the number of the account you want to remove (If you want to exit, put exit):").strip()
-        if int(num) >= 1 and int(num) <= len(information) and num.isdigit() == True:
-            num = int(num)
-            break
-        elif num == "exit":
-            return information
-        else:
-            print("That is not a valid input...")
-    information.pop(num-1)
-    return information
-
+            print("Invalid choice.")
+            input("Press Enter to continue...")
 
 
 def sign_out(information):
-    #Go through and check each to make sure that they are signed out
     for i in information:
         if i["status"] == "active":
             i["status"] = "inactive"
     return information
 
 
+# Optional: Profile viewer for logged-in users
+def view_profile(information):
+    clear()
+    for i in information:
+        if i["status"] == "active":
+            print(f"--- Your Profile ---\nUsername: {i['username']}\nHighscore: {i['high score']}")
+            input("\nPress Enter to continue...")
+            clear()
+            return
+    print("No active user found.")
+    input("\nPress Enter to continue...")
 
+
+# Optional: Password requirement checker (used in registration)
+def valid_password(password):
+    if len(password) < 6:
+        print("Password must be at least 6 characters long.")
+        return False
+    if not any(char.isdigit() for char in password):
+        print("Password must include at least one number.")
+        return False
+    if not any(char.isalpha() for char in password):
+        print("Password must include at least one letter.")
+        return False
+    return True

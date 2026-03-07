@@ -6,6 +6,7 @@ from user_registration import *
 
 
 def main():
+    clear()
     while True:
         information = load_csv()
         print("Welcome to the High Score Tracker!")
@@ -22,7 +23,6 @@ def main():
                     if i["status"] == 'active':
                         if i["username"] == "admin":
                             while True:
-                                #View leaderboared, go back to main, play, view/delete
                                 options = ["View leaderboard",  "Play the game", "View all users and delete them if you want", "Go back to main"]
                                 for x in range(4):
                                     print(f"{x+1}. {options[x]}")
@@ -31,12 +31,18 @@ def main():
                                 if num.isdigit() == True:
                                     num = int(num)
                                     if num == 1:
+                                        clear()
                                         display_high_scores(information)
                                     elif num == 2:
-                                        run_game(int(i["high score"]))
+                                        clear()
+                                        score = run_game(int(i["high score"]))
+                                        if score is not None:
+                                            information = saving_high_score(score, i["username"], information)
                                     elif num == 3:
+                                        clear
                                         information = view_delete(information)
                                     elif num == 4:
+                                        clear()
                                         break
                                     else:
                                         print("Please put a number 1-4...")
@@ -44,7 +50,7 @@ def main():
                                     print("Please enter a valid number")
                         else:
                             while True:
-                                options = ["View leaderboard",  "Play the game", "Go back to main"]
+                                options = ["View leaderboard",  "Play the game", "View Profile", "Go back to main"]
                                 for x in range(3):
                                     print(f"{x+1}. {options[x]}")
 
@@ -54,8 +60,12 @@ def main():
                                     if num == 1:
                                         display_high_scores(information)
                                     elif num == 2:
-                                        run_game(int(i["high score"]))
+                                        score = run_game(int(i["high score"]))
+                                        if score is not None:
+                                            information = saving_high_score(score, i["username"], information)
                                     elif num == 3:
+                                        view_profile(information)
+                                    elif num == 4:
                                         break
                                     else:
                                         print("Please put a number 1-3...")
@@ -63,9 +73,6 @@ def main():
                                     print("Please enter a valid number")
                     else:
                         pass
-
-
-
         elif user_choice == '2':
             information = register(information)
 
