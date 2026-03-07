@@ -340,7 +340,10 @@ def run_game(high_score):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                    exit()
+                    if score_time > high_score:
+                        return score_time
+                    else:
+                        return high_score
 
                 elif event.type == SPAWN_CACTUS_EVENT:
                     if game_started:
