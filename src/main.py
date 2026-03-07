@@ -24,8 +24,8 @@ def main():
                             while True:
                                 #View leaderboared, go back to main, play, view/delete
                                 options = ["View leaderboard",  "Play the game", "View all users and delete them if you want", "Go back to main"]
-                                for i in range(4):
-                                    print(f"{i+1}. {options[i]}")
+                                for x in range(4):
+                                    print(f"{x+1}. {options[x]}")
 
                                 num = input("Please pick one of the options:").strip().lower()
                                 if num.isdigit() == True:
@@ -78,5 +78,6 @@ def main():
         else:
             print("Please enter a valid choice")
         save_changes(information)
+
 
 main()
