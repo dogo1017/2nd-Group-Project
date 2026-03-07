@@ -19,7 +19,7 @@ def log_in(information):
     #Put into a loop
     while True:
         fix = False
-        username = input("\nPlease enter your username (put quit if you want to exit):").strip()
+        username = input("\nPlease enter your username (put exit if you want to exit):").strip()
         #Then allow them to input passwords with an option to quit
         for i in information:
             if i["username"] == username:
@@ -33,7 +33,7 @@ def log_in(information):
             print("That username doesn't exist...")
     while True:
             #if they entered a correct username, ask them for there password or quit
-            password = input("\nPlease tell me the password (Put quit if you want to exit):").strip()
+            password = input("\nPlease tell me the password (Put exit if you want to exit):").strip()
                            #Check hashed password 
             mixer = hashlib.shake_128()
             h_password = password.encode('utf-8')
