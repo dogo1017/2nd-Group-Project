@@ -563,4 +563,3 @@ def run_game(high_score):
             clock.tick(60)
 
     pygame.quit()
-run_game(123)
